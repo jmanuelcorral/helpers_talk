@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Presentation</title>
+    <meta charset='utf-8'>
+    <script src='./slides.js'></script>
+  </head>
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+  </style>
+
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+      <article class='biglogo'>
+      </article>
+
+      <article>
+        <h1>
+          HTML Helpers 
+          <br>
+          en ASP.NET MVC
+        </h1>
+        <p>
+          José Manuel Corral
+          <br>
+          4 Octubre, 2013
+        </p>
+      </article>
+      
+      <article>
+        <h3>¿Qué es un HTML Helper?</h3>
+        <p>
+          Un helper no es más que un método que devuelve una cadena de texto.
+          Dicha cadena de texto puede ser lo que nosotros queramos:
+          Etiquetas HTML, Javascript...
+        </p>
+        <p>
+          También podríamos considerar los HTML Helpers "algo" parecido a los 
+          controles clásicos de ASP.net Webforms.
+        </p>
+      </article>
+
+      <article>
+        <h3>
+          Principales ventajas de utilizar HTML Helpers propios
+        </h3>
+        <ul class="build">
+          <li>
+            Eliminar trabajo repetitivo.
+          </li>
+          <li>
+            Mejorar la legibilidad de mis vistas.
+          </li>
+          <li>
+            Empaquetamiento y reusabilidad.
+          </li>
+          <li>
+            Testeables.
+          </li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>
+          Ejemplo de uso de un HTML Helper
+        </h3>
+        <pre>
+@Html.TextBox("nombre");
+        </pre>
+        <p>
+          El cual genera una salida HTML:
+        </p>
+        <pre>
+&lt;input id='nombre' name='nombre' type='text' value='' /&gt;
+        </pre>
+      </article>
+
+      <article class='smaller'>
+        <h3>
+          HTML Helpers incluidos en ASP.NET MVC 4
+        </h3>
+        <ul>
+          <li>Html.ActionLink</li>
+          <li>Html.BeginForm</li>
+          <li>Html.CheckBox</li>
+          <li>Html.DropDownList</li>
+          <li>Html.EndForm</li>
+          <li>Html.Hidden</li>
+          <li>Html.ListBox</li>
+          <li>Html.Password</li>
+          <li>Html.RadioButton</li>
+          <li>Html.TextArea</li>
+          <li>Html.TextBox</li>
+        </ul>
+      </article>
+
+      <article class='smaller'>
+        <h3>
+          Creando nuestro primer HTML Helper
+        </h3>
+        <p>Crearemos una aplicacion MVC 4 y dentro del proyecto una carpeta Helpers.</p>
+        <p>Añadiremos una nueva clase con el siguiente codigo:</p>
+        <pre>
+using System;
+namespace SesionMVC.Helpers
+{
+  public class LabelHelper {
+    public static string Label(String target, String text){
+      return String.Format("&lt;label for='{0}'&gt;{1}&lt;/label&gt;", target, text);
+    }
+  }
+}
+        </pre>
+        <p>Simplemente hemos creado una clase con una función estática que devuelve un string.</p>
+      </article>
+
+      <article class='smaller'>
+        <h3>
+          Creando nuestro primer HTML Helper
+        </h3>
+        <p>Añadiremos una vista al controlador por defecto de nuestra aplicación</p>
+        <p>Editaremos la vista:</p>
+        <pre>
+@import SesionMVC.Helpers
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;
+    Mi primer html helper
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    @LabelHelper.Label("name","Nombre completo: ")
+    &lt;br /&gt;
+    &lt;input type="text" id="name" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <p>¿Que observais en la vista?</p>
+        <p>¿Como mejoraríais el html helper?</p>
+        <p>¿Como hacemos testing del html helper?</p>
+      </article>
+
+      <article>
+        <h3>
+          Testing de MVC Helpers
+        </h3>
+        <p>Material Necesario para hacer un test simple:</p>
+        <ul class="build">
+          <li>Nuget instalado</li>
+          <li>Framework de testing para .net</li>
+          <li>Un Proyecto de test</li>
+        </ul>
+      </article>
+
+
+      <article class='smaller'>
+        <h3>
+          Creando un Test unitario
+        </h3>
+        <p>Creamos un proyecto de test, y por nuget nos bajaremos el framework de testing que queramos utilizar.</p>
+        <p>En este ejemplo utilizaremos nunit:</p>
+        <pre>
+using System.Web.Mvc;
+using NUnit.Framework;
+using SesionMVC.Helpers
+
+[TestFixture]
+public class ButtonTest
+{
+  [Test]
+  public void TestMolon()
+  {
+      var comparer = LabelHelper.Label("name","Nombre completo: ");
+      Assert.AreEqual(comparer, "&lt;label for='name'&gt;Nombre completo: &lt;/label&gt;");
+  }
+}
+</pre>
+      <p>
+          Ahora, una vez realizado y verificado el test, empezaremos a mejorar nuestro helper.
+      </p>
+      </article>
+
+      <article>
+        <h3>
+          Mejoras en el Html Helper
+        </h3>
+        <p>
+          Transformando nuestro Html Helper en un Extension Method de la clase HtmlHelper.
+        </p>
+        <p>El código de nuestra vista pasará de ser esto:</p>
+        <pre> @LabelHelper.Label("name", "Nombre Completo: ")</pre>
+        <p>a esto:</p>
+        <pre> @Html.Label("name", "Nombre Completo: ")</pre>
+        <p> Quedará integrado en el namespace desde donde se llaman los HtmlHelpers, siendo más facil de encontrar por el desarrollador y por el intellisense. </p>
+      </article>
+       <article class='smaller'>
+        <h3>
+          Refactorizando nuestro primer HTML Helper
+        </h3>
+        <p>Para transformarlo en un extension method, sólo necesitamos pasar la referencia al constructor de la clase HtmlHelper.</p>
+        <p>Editaremos nuestra función estática de la siguiente forma:</p>
+        <pre>
+using System;
+namespace SesionMVC.Helpers
+{
+  public class LabelHelper {
+    public static string Label(this HtmlHelper helper, String target, String text){
+      return String.Format("&lt;label for='{0}'&gt;{1}&lt;/label&gt;", target, text);
+    }
+  }
+}
+        </pre>
+        <p>Cambiamos en nuestra vista la definición y lo probamos!</p>
+      </article>
+      
+  
+
+
+
+
+
+
+
+      
+      <article>
+        <h3>
+          Styles
+        </h3>
+        <ul>
+          <li>
+            <span class='red'>class="red"</span>
+          <li>
+            <span class='blue'>class="blue"</span>
+          <li>
+            <span class='green'>class="green"</span>
+          <li>
+            <span class='yellow'>class="yellow"</span>
+          <li>
+            <span class='black'>class="black"</span>
+          <li>
+            <span class='white'>class="white"</span>
+          <li>
+            <b>bold</b> and <i>italic</i>
+        </ul>
+      </article>
+      
+      <article>
+        <h2>
+          Segue slide
+        </h2>
+      </article>
+
+      <article>
+        <h3>
+          Slide with an image
+        </h3>
+        <p>
+          <img style='height: 500px' src='images/example-graph.png'>
+        </p>
+        <div class='source'>
+          Source: Sergey Brin
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          Slide with an image (centered)
+        </h3>
+        <p>
+          <img class='centered' style='height: 500px' src='images/example-graph.png'>
+        </p>
+        <div class='source'>
+          Source: Larry Page
+        </div>
+      </article>
+
+      <article class='fill'>
+        <h3>
+          Image filling the slide (with optional header)
+        </h3>
+        <p>
+          <img src='images/example-cat.jpg'>
+        </p>
+        <div class='source white'>
+          Source: Eric Schmidt
+        </div>
+      </article>
+
+      <article>
+        <h3>
+          This slide has some code
+        </h3>
+        <section>
+        <pre>
+&lt;script type='text/javascript'&gt;
+  // Say hello world until the user starts questioning
+  // the meaningfulness of their existence.
+  function helloWorld(world) {
+    for (var i = 42; --i &gt;= 0;) {
+      alert('Hello ' + String(world));
+    }
+  }
+&lt;/script&gt;
+&lt;style&gt;
+  p { color: pink }
+  b { color: blue }
+  u { color: 'umber' }
+&lt;/style&gt;
+</pre>
+        </section>
+      </article>
+      
+      <article class='smaller'>
+        <h3>
+          This slide has some code (small font)
+        </h3>
+        <section>
+        <pre>
+&lt;script type='text/javascript'&gt;
+  // Say hello world until the user starts questioning
+  // the meaningfulness of their existence.
+  function helloWorld(world) {
+    for (var i = 42; --i &gt;= 0;) {
+      alert('Hello ' + String(world));
+    }
+  }
+&lt;/script&gt;
+&lt;style&gt;
+  p { color: pink }
+  b { color: blue }
+  u { color: 'umber' }
+&lt;/style&gt;
+</pre>
+        </section>
+      </article>
+      
+      <article>
+        <q>
+          The best way to predict the future is to invent it.
+        </q>
+        <div class='author'>
+          Alan Kay
+        </div>
+      </article>
+      
+      <article class='smaller'>
+        <q>
+          A distributed system is one in which the failure of a computer 
+          you didn’t even know existed can render your own computer unusable.
+        </q>
+        <div class='author'>
+          Leslie Lamport
+        </div>
+      </article>
+      
+      <article class='nobackground'>
+        <h3>
+          A slide with an embed + title
+        </h3>
+        
+        <iframe src='http://www.google.com/doodle4google/history.html'></iframe>
+      </article>
+
+      <article class='nobackground'>
+        <iframe src='http://www.google.com/doodle4google/history.html'></iframe>
+      </article>
+
+      <article class='fill'>
+        <h3>
+          Full-slide embed with (optional) slide title on top
+        </h3>
+        <iframe src='http://www.google.com/doodle4google/history.html'></iframe>
+      </article>
+      
+      <article>
+        <h3>
+          Thank you!
+        </h3>
+        
+        <ul>
+          <li>
+            <a href='http://www.google.com'>google.com</a>
+        </ul>
+      </article>
+
+    </section>
+
+  </body>
+</html>
