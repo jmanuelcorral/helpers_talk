@@ -24,7 +24,8 @@
           en ASP.NET MVC
         </h1>
         <p>
-          José Manuel Corral
+         <img style='height: 43px' src='speaker.png'>
+        José Manuel Corral
           <br>
           4 Octubre, 2013
         </p>
@@ -216,11 +217,125 @@ namespace SesionMVC.Helpers
         </pre>
         <p>Cambiamos en nuestra vista la definición y lo probamos!</p>
       </article>
-      
+      <article class='smaller'>
+        <h3>
+          Vista del refactor HTML Helper
+        </h3>
+        <p>La vista tiene que quedar algo parecido a esto:</p>
+        <pre>
+@import SesionMVC.Helpers
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;
+    Mi primer html helper
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    @Html.Label("name","Nombre completo: ")
+    &lt;br /&gt;
+    &lt;input type="text" id="name" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <p>¿Que va a pasar con el test de este Html Helper?</p>
+        <p>¿Soluciones?</p>
+      </article>
+
+    <article class='smaller'>
+    <h3>Unit Testing ¿Fácil?</h3>
+    <pre>
+    [TestFixture]
+    public class ButtonTest
+    {
+      [Test]
+      public void TestMolon()
+      {
+          var FakeHtmlHelper = CreateFakeHtmlHelper();
+          var comparer = LabelHelper.Label(FakeHtmlHelper, "name","Nombre completo: ");
+          Assert.AreEqual(comparer, "&lt;label for='name'&gt;Nombre completo: &lt;/label&gt;");
+      }
+
+      public HtmlHelper CreateFakeHtmlHelper(ViewDataDictionary vd)
+      {
+          //Inicializar un HtmlHelper válido es una tarea titánica, 
+          //ya que depende del ViewContext, 
+          //Este a su vez depende del ControllerContext,
+          //A su vez depende del HttpContextBase, 
+          //un RouteData, una View...
+          //...
+      }
+    }
+    </pre>
+    </article>
+    <article class='smaller'>
+      <h3>
+        Unit Testing LEVEL 2
+      </h3>
+      <p>Volvemos a ir al Nuget y nos bajamos el framework de Mocking que nos haga sentir más comodos. </p>
+      <p>En este ejemplo utilizaremos Moq:</p>
+      <pre>
+public HtmlHelper CreateFakeHtmlHelper(ViewDataDictionary vd)
+{
+  var mockViewContext = new Mock<ViewContext>(
+  new ControllerContext(
+    new Mock<HttpContextBase>().Object,
+    new RouteData(),
+    new Mock<ControllerBase>().Object),
+  new Mock<IView>().Object,
+  vd,
+  new TempDataDictionary(),
+  new Mock<TextWriter>().Object);
+
+  var mockViewDataContainer = new Mock<IViewDataContainer>();
   
-
-
-
+  mockViewDataContainer.Setup(v => v.ViewData).Returns(vd);
+  
+  return new HtmlHelper(mockViewContext.Object, mockViewDataContainer.Object);
+}
+    </pre>
+    </article>
+    <article>
+      <h3>
+        Hasta aquí... ¿Preguntas?
+      </h3>
+      <p>
+          <img class='centered' style='height: 500px' src='question.jpg'>
+        </p>
+      <div class="build">
+        <p>¿Quereis más helpers?</p>
+        <p>¿Más Testing?</p>
+      </div>
+    </article>
+    <article class='smaller'>
+      <h3>
+        Strongly Typed MVC helpers
+      </h3>
+      <p>
+          Actualmente, cuando generamos el CRUD de uno de nuestros modelo en un proyecto de ASP.NET MVC 4, vemos que se correlacionan las propiedades o campos de dicho modelo, con difentes Html helpers. Éstos, tienen en cuenta los DataAnnotations de nuestro modelo.
+        </p>
+      <p>Ejemplo:</p>
+      <pre>
+namespace EjemploMVC.Models
+{
+  public class Person
+  {
+    [Display(Name="Código")]
+    public Int32 Id { get; set; }
+    [Display(Name = "Nombre")]
+    public string Name { get; set; }
+    [Display(Name = "Apellido 1")]
+    public string FirstSurname { get; set; }
+    [Display(Name = "Apellido 2")]
+    public string SecondSurname { get; set; }
+    [Display(Name = "Fecha Nacimiento")]
+    public DateTime BornDate { get; set; }
+    [Display(Name = "Fecha Registro")]
+    public DateTime Register { get; set; } 
+    }
+}
+    </pre>
+    </article>
 
 
 
