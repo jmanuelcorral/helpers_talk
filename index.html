@@ -397,8 +397,23 @@ public void FieldTestRequired(){
 }</pre>
 </article>
 <article class="smaller">
-  <h3>La llamada a nuestro helper desde la vista será</h3>
+  <h3>Vista Asociada</h3>
+  <p>La llamada a nuestro helper desde la vista será:</p>
   <pre>
+    @Html.Field(model=>model.Id)
+    @Html.Field(model=>model.Name)
+    @Html.Field(model=>model.BornDate)
+  </pre>
+  <p>y su salida html:</p>
+  <pre>
+&lt;label for="Id"&gt;Codigo&lt;/label&gt;
+&lt;input type="text" value="" id="Id" name="Id" class="required" /&gt; 
+
+&lt;label for="Name"&gt;Nombre&lt;/label&gt;
+&lt;input type="text" value="" id="Name" name="Name" /&gt; 
+
+&lt;label for="Id"&gt;Fecha Nacimiento&lt;/label&gt;
+&lt;input type="date" value="" id="BornDate" name="BornDate" /&gt; 
   </pre>
 </article>      
 <article class="smaller">
@@ -428,6 +443,7 @@ public static MvcHtmlString Field&lt;TModel, TValue&gt;(this HtmlHelper&lt;TMode
     <li>Utilizar una clase de Test por Helper</li>
     <li>Empaquetar los Helpers con Nuget</li>
     <li>Incluir ModelBinders</li>
+    <li>Añadir T4 Scaffolding</li>
     <li>Namespace propio para los HtmlHelpers dentro del objeto HtmlHelper</li>
   </ul>
 </article>
