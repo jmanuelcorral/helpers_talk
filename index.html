@@ -1,79 +1,466 @@
 <!DOCTYPE html>
 <html>
-
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Helpers talk : A simple presentation about asp.net MVC helpers" />
-
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
-
-    <title>Helpers talk</title>
+    <title>Presentation</title>
+    <meta charset='utf-8'>
+    <script src='./slides.js'></script>
   </head>
+  <style>
+    /* Your individual styles here, or just use inline styles if that’s
+       what you want. */
+  </style>
 
-  <body>
+  <body style='display: none'>
+    <section class='slides layout-regular template-default'>
+      <!-- Your slides (<article>s) go here. Delete or comment out the
+           slides below. -->
+      <article class='biglogo'>
+      </article>
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/jmanuelcorral/helpers_talk">View on GitHub</a>
+      <article>
+        <h1>
+          HTML Helpers 
+          <br>
+          en ASP.NET MVC
+        </h1>
+        <p>
+         <img style='height: 43px' src='speaker.png'>
+        José Manuel Corral
+          <br>
+          4 Octubre, 2013
+        </p>
+      </article>
+      
+      <article>
+        <h3>¿Qué es un HTML Helper?</h3>
+        <p>
+          Un helper no es más que un método que devuelve una cadena de texto.
+          Dicha cadena de texto puede ser lo que nosotros queramos:
+          Etiquetas HTML, Javascript...
+        </p>
+        <p>
+          También podríamos considerar los HTML Helpers "algo" parecido a los 
+          controles clásicos de ASP.net Webforms.
+        </p>
+      </article>
 
-          <h1 id="project_title">Helpers talk</h1>
-          <h2 id="project_tagline">A simple presentation about asp.net MVC helpers</h2>
-
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/jmanuelcorral/helpers_talk/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/jmanuelcorral/helpers_talk/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
-
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
+      <article>
         <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+          Principales ventajas de utilizar HTML Helpers propios
+        </h3>
+        <ul class="build">
+          <li>
+            Eliminar trabajo repetitivo.
+          </li>
+          <li>
+            Mejorar la legibilidad de mis vistas.
+          </li>
+          <li>
+            Empaquetamiento y reusabilidad.
+          </li>
+          <li>
+            Testeables.
+          </li>
+        </ul>
+      </article>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+      <article>
+        <h3>
+          Ejemplo de uso de un HTML Helper
+        </h3>
+        <pre>
+@Html.TextBox("nombre");
+        </pre>
+        <p>
+          El cual genera una salida HTML:
+        </p>
+        <pre>
+&lt;input id='nombre' name='nombre' type='text' value='' /&gt;
+        </pre>
+      </article>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+      <article class='smaller'>
+        <h3>
+          HTML Helpers incluidos en ASP.NET MVC 4
+        </h3>
+        <ul>
+          <li>Html.ActionLink</li>
+          <li>Html.BeginForm</li>
+          <li>Html.CheckBox</li>
+          <li>Html.DropDownList</li>
+          <li>Html.EndForm</li>
+          <li>Html.Hidden</li>
+          <li>Html.ListBox</li>
+          <li>Html.Password</li>
+          <li>Html.RadioButton</li>
+          <li>Html.TextArea</li>
+          <li>Html.TextBox</li>
+        </ul>
+      </article>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+      <article class='smaller'>
+        <h3>
+          Creando nuestro primer HTML Helper
+        </h3>
+        <p>Crearemos una aplicacion MVC 4 y dentro del proyecto una carpeta Helpers.</p>
+        <p>Añadiremos una nueva clase con el siguiente codigo:</p>
+        <pre>
+using System;
+namespace SesionMVC.Helpers
+{
+  public class LabelHelper {
+    public static string Label(String target, String text){
+      return String.Format("&lt;label for='{0}'&gt;{1}&lt;/label&gt;", target, text);
+    }
+  }
+}
+        </pre>
+        <p>Simplemente hemos creado una clase con una función estática que devuelve un string.</p>
+      </article>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+      <article class='smaller'>
+        <h3>
+          Creando nuestro primer HTML Helper
+        </h3>
+        <p>Añadiremos una vista al controlador por defecto de nuestra aplicación</p>
+        <p>Editaremos la vista:</p>
+        <pre>
+@import SesionMVC.Helpers
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;
+    Mi primer html helper
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    @LabelHelper.Label("name","Nombre completo: ")
+    &lt;br /&gt;
+    &lt;input type="text" id="name" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <p>¿Que observais en la vista?</p>
+        <p>¿Como mejoraríais el html helper?</p>
+        <p>¿Como hacemos testing del html helper?</p>
+      </article>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+      <article>
+        <h3>
+          Testing de MVC Helpers
+        </h3>
+        <p>Material Necesario para hacer un test simple:</p>
+        <ul class="build">
+          <li>Nuget instalado</li>
+          <li>Framework de testing para .net</li>
+          <li>Un Proyecto de test</li>
+        </ul>
+      </article>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+      <article class='smaller'>
+        <h3>
+          Creando un Test unitario
+        </h3>
+        <p>Creamos un proyecto de test, y por nuget nos bajaremos el framework de testing que queramos utilizar.</p>
+        <p>En este ejemplo utilizaremos nunit:</p>
+        <pre>
+using System.Web.Mvc;
+using NUnit.Framework;
+using SesionMVC.Helpers
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+[TestFixture]
+public class MyTest
+{
+  [Test]
+  public void TestMolon()
+  {
+      var comparer = LabelHelper.Label("name","Nombre completo: ");
+      Assert.AreEqual(comparer, "&lt;label for='name'&gt;Nombre completo: &lt;/label&gt;");
+  }
+}
+</pre>
+      <p>
+          Ahora, una vez realizado y verificado el test, empezaremos a mejorar nuestro helper.
+      </p>
+      </article>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+      <article>
+        <h3>
+          Mejoras en el Html Helper
+        </h3>
+        <p>
+          Transformando nuestro Html Helper en un Extension Method de la clase HtmlHelper.
+        </p>
+        <p>El código de nuestra vista pasará de ser esto:</p>
+        <pre> @LabelHelper.Label("name", "Nombre Completo: ")</pre>
+        <p>a esto:</p>
+        <pre> @Html.Label("name", "Nombre Completo: ")</pre>
+        <p> Quedará integrado en el namespace desde donde se llaman los HtmlHelpers, siendo más facil de encontrar por el desarrollador y por el intellisense. </p>
+      </article>
+       <article class='smaller'>
+        <h3>
+          Refactorizando nuestro primer HTML Helper
+        </h3>
+        <p>Para transformarlo en un extension method, sólo necesitamos pasar la referencia al constructor de la clase HtmlHelper.</p>
+        <p>Editaremos nuestra función estática de la siguiente forma:</p>
+        <pre>
+using System;
+namespace SesionMVC.Helpers
+{
+  public class LabelHelper {
+    public static string Label(this HtmlHelper helper, String target, String text){
+      return String.Format("&lt;label for='{0}'&gt;{1}&lt;/label&gt;", target, text);
+    }
+  }
+}
+        </pre>
+        <p>Cambiamos en nuestra vista la definición y lo probamos!</p>
+      </article>
+      <article class='smaller'>
+        <h3>
+          Vista del refactor HTML Helper
+        </h3>
+        <p>La vista tiene que quedar algo parecido a esto:</p>
+        <pre>
+@import SesionMVC.Helpers
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;
+    Mi primer html helper
+    &lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    @Html.Label("name","Nombre completo: ")
+    &lt;br /&gt;
+    &lt;input type="text" id="name" /&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+        </pre>
+        <p>¿Que va a pasar con el test de este Html Helper?</p>
+        <p>¿Soluciones?</p>
+      </article>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+    <article class='smaller'>
+    <h3>Unit Testing ¿Fácil?</h3>
+    <pre>
+    [TestFixture]
+    public class MyTest
+    {
+      [Test]
+      public void TestMolon()
+      {
+          var FakeHtmlHelper = CreateFakeHtmlHelper();
+          var comparer = LabelHelper.Label(FakeHtmlHelper, "name","Nombre completo: ");
+          Assert.AreEqual(comparer, "&lt;label for='name'&gt;Nombre completo: &lt;/label&gt;");
+      }
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
+      public HtmlHelper CreateFakeHtmlHelper()
+      {
+          //Inicializar un HtmlHelper válido es una tarea titánica, 
+          //ya que depende del ViewContext, 
+          //Este a su vez depende del ControllerContext,
+          //A su vez depende del HttpContextBase, 
+          //un RouteData, una View...
+          //...
+      }
+    }
+    </pre>
+    </article>
+    <article class='smaller'>
+      <h3>
+        Unit Testing LEVEL 2
+      </h3>
+      <p>Volvemos a ir al Nuget y nos bajamos el framework de Mocking que nos haga sentir más comodos. </p>
+      <p>En este ejemplo utilizaremos Moq:</p>
+      <pre>
+public HtmlHelper CreateFakeHtmlHelper(ViewDataDictionary vd)
+{
+  var mockViewContext = new Mock<ViewContext>(
+  new ControllerContext(
+    new Mock<HttpContextBase>().Object,
+    new RouteData(),
+    new Mock<ControllerBase>().Object),
+  new Mock<IView>().Object,
+  vd,
+  new TempDataDictionary(),
+  new Mock<TextWriter>().Object);
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Helpers talk maintained by <a href="https://github.com/jmanuelcorral">jmanuelcorral</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+  var mockViewDataContainer = new Mock<IViewDataContainer>();
+  
+  mockViewDataContainer.Setup(v => v.ViewData).Returns(vd);
+  
+  return new HtmlHelper(mockViewContext.Object, mockViewDataContainer.Object);
+}
+    </pre>
+    </article>
+    <article>
+      <h3>
+        Hasta aquí... ¿Preguntas?
+      </h3>
+      <p>
+          <img class='centered' style='height: 500px' src='questions.png'>
+        </p>
+      <div class="build">
+        <p>¿Quereis más helpers?</p>
+        <p>¿Más Testing?</p>
+      </div>
+    </article>
+    <article class='smaller'>
+      <h3>
+        Strongly Typed MVC helpers
+      </h3>
+      <p>
+          Actualmente, cuando generamos el CRUD de uno de nuestros modelo en un proyecto de ASP.NET MVC 4, vemos que se correlacionan las propiedades o campos de dicho modelo, con difentes Html helpers. Éstos, tienen en cuenta los DataAnnotations, y el ModelMetadata de nuestro modelo.
+        </p>
+      <p>Ejemplo:</p>
+      <pre>
+namespace EjemploMVC.Models
+{
+  public class Person
+  {
+    [Display(Name="Código")]
+    public Int32 Id { get; set; }
+    [Display(Name = "Nombre")]
+    public string Name { get; set; }
+    [Display(Name = "Apellido 1")]
+    public string FirstSurname { get; set; }
+    [Display(Name = "Apellido 2")]
+    public string SecondSurname { get; set; }
+    [Display(Name = "Fecha Nacimiento")]
+    public DateTime BornDate { get; set; }
+    [Display(Name = "Fecha Registro")]
+    public DateTime Register { get; set; } 
+    }
+}</pre>
+    </article>
+    <article class='smaller'>
+      <h3>Definiendo Metadata y DataAnnotations</h3>
+      <p>DataAnnotations: son validaciones de datos de acuerdo a nuestras necesidades. Esas necesidades son decoraciones que indicaremos a los miembros de nuestras entidades y Datos. Una decoración corresponderá a una validación.</p>
+      <p>Ejemplo:</p>
+      <pre>
+public class Person
+{
+  [Required(ErrorMessage = "El campo código de Persona es obligatorio.")]
+  public Int32 Id { get; set; }
+  [...]
+}
+</pre>
+      <p>ModelMetadata: Proporciona un contenedor para los metadatos comunes, para la clase ModelMetadataProvider y para la clase ModelValidator de un modelo de datos.</p>
+      <pre>
+public class Person
+{
+  [Display(Name="Código")]
+  public Int32 Id { get; set; }
+  [...]
+}
+</pre>
+</article>
+<article class="smaller">
+  <h3>Ejemplo de HTML Helper Strongly Typed</h3>
+  <p>En el siguiente ejemplo, vamos a crear un HtmlHelper que genere tanto el Label, como el TextBox, además siendo Strongly-Typed, Determinaremos su tipo (texto o fecha), haciendo aparecer el input como es debido, y mostraremos un mensaje de requerido si es necesario.
+  </p>
+  <p>Nuestra vista tendrá que devolver el siguiente html:</p>
+  <pre>
+    &lt;label for="inputid"&gt;textoamostrar&lt;/label&gt;
+    &lt;input type="[text|date]" value="valor" id="inputid" name="inputid" 
+    class="[required|]" /&gt;
+  </pre>
+</article>
+<article class="smaller">
+  <h3>Por lo tanto ha de satisfacer el siguientes tests:</h3>
+  <pre>[Test]
+public void FieldTestDate(){
+  var FakeHtmlHelper = CreateStronglyTypedHtmlHelperWithaPerson();
+  String executed = FieldHelper.Field(FakeHtmlHelper, x=>x.BornDate);
+  String expected="&lt;label for=\"BornDate\"&gt;Fecha Nacimiento&lt;/label&gt;
+    &lt;input type=\"date\" value=\"valor\" id=\"BornDate\" name=\"BornDate\" /&gt;"
+  Assert.AreEqual(expected, executed);
+}
+[Test]
+public void FieldTestText(){
+  var FakeHtmlHelper = CreateStronglyTypedHtmlHelperWithaPerson();
+  String executed = FieldHelper.Field(FakeHtmlHelper, x=>x.Name);
+  String expected="&lt;label for=\"Name\"&gt;Nombre&lt;/label&gt;
+    &lt;input type=\"text\" value=\"valor\" id=\"name\" name=\"name\" /&gt;"
+  Assert.AreEqual(expected, executed);
+}
+[Test]
+public void FieldTestRequired(){
+  var FakeHtmlHelper = CreateStronglyTypedHtmlHelperWithaPerson();
+  String executed = FieldHelper.Field(FakeHtmlHelper, x=>x.Name);
+  String expected="&lt;label for=\"Name\"&gt;Nombre&lt;/label&gt;
+    &lt;input type=\"text\" value=\"valor\" id=\"name\" name=\"name\" 
+    class=\"[required|]\" /&gt;"
+  Assert.AreEqual(expected, executed);
+}</pre>
+</article>
+<article class="smaller">
+  <h3>Vista Asociada</h3>
+  <p>La llamada a nuestro helper desde la vista será:</p>
+  <pre>
+    @Html.Field(model=>model.Id)
+    @Html.Field(model=>model.Name)
+    @Html.Field(model=>model.BornDate)
+  </pre>
+  <p>y su salida html:</p>
+  <pre>
+&lt;label for="Id"&gt;Codigo&lt;/label&gt;
+&lt;input type="text" value="" id="Id" name="Id" class="required" /&gt; 
 
-    
+&lt;label for="Name"&gt;Nombre&lt;/label&gt;
+&lt;input type="text" value="" id="Name" name="Name" /&gt; 
 
-  </body>
+&lt;label for="Id"&gt;Fecha Nacimiento&lt;/label&gt;
+&lt;input type="date" value="" id="BornDate" name="BornDate" /&gt; 
+  </pre>
+</article>      
+<article class="smaller">
+  <h3>Nuestro Helper</h3>
+  <pre>
+public static MvcHtmlString Field&lt;TModel, TValue&gt;(this HtmlHelper&lt;TModel&gt; html,
+              Expression&lt;Func&lt;TModel, TValue&gt;&gt; expression) where TModel: class
+{
+   var modelMetadata = ModelMetadata.FromLambdaExpression&lt;TModel, TProperty&gt;(
+          expression, 
+          new ViewDataDictionary &lt;TModel&gt;());
+   MvcHtmlString.Create(String.Concat(CreateLabel(modelMetadata.PropertyName), 
+      CreateInput(modelMetadata.PropertyName, 
+                  modelMetadata.IsRequired, 
+                  modelMetadata.value.GetType())));
+}
+  </pre>
+  <p>Nuestro Helper recibirá como parámetro una estructura de arbol que contiene una Lambda Expression. O como yo lo suelo llamar un <b>Func</b> descompilado.</p>
+</article>
+<article class="smaller">
+  <h3>Estrategias y patrones para crear Helpers</h3>
+  <p>Existen muchas estrategias y patrones para la generación de HTML Helpers.</p>
+  <ul class="build">
+    <li>Utilizar el Patron Builder</li>
+    <li>Utilizar Fluent Definitions en los Helpers</li>
+    <li>Utilizar un Proyecto Anexo a la solución MVC</li>
+    <li>Utilizar una clase de Test por Helper</li>
+    <li>Empaquetar los Helpers con Nuget</li>
+    <li>Incluir ModelBinders</li>
+    <li>Añadir T4 Scaffolding</li>
+    <li>Namespace propio para los HtmlHelpers dentro del objeto HtmlHelper</li>
+  </ul>
+</article>
+<article class="smaller">
+  <h3>
+  Caso Real - Sushi MVC Helpers
+  </h3>
+  <p>Instalación via Nuget: PM> Install package sushiMVC</p>
+  <p>Pagina del proyecto: <a href="http://sushi.azurewebsites.net">http://sushi.azurewebsites.net</a></p>
+  <p>Sushi es una colección de MVC Helpers que intentan seguir todas esas estrategias de diseño.</p>
+  <img class="centered" src="sushi.png" />
+</article>
+ <article>
+  <h2>
+   ¡Muchas grácias por vuestra atención!
+  </h2>
+  </article>
+</section>
+</body>
 </html>
