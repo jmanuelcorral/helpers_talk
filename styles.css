@@ -97,8 +97,9 @@ body {
 }
 
 .slides.template-default > article:not(.nobackground):not(.biglogo) {
-  background: url(logo_altran.png) 710px 625px no-repeat;  
-  
+  background-image: url(logo_altran.png), url(fondo.png);
+  background-position: 710px 625px, 430px;
+  background-repeat: no-repeat;
   background-color: white;  
 } 
 
@@ -407,9 +408,9 @@ pre {
 
   color: black;
   background: rgb(240, 240, 240);
-  border: 1px solid rgb(224, 224, 224);
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .1);
-  
+  border: 0px solid rgb(224, 224, 224);
+  /*box-shadow: inset 0 2px 6px rgba(0, 0, 0, .1);*/
+  opacity: 0.8;
   overflow: hidden;
 }
 
